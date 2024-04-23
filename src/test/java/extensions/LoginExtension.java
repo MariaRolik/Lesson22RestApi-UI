@@ -1,8 +1,10 @@
 package extensions;
 
+import configs.UserConfig;
 import io.qameta.allure.Step;
 import models.LoginRequestModel;
 import models.LoginResponseModel;
+import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.openqa.selenium.Cookie;
@@ -17,9 +19,11 @@ public class LoginExtension implements BeforeEachCallback {
     @Override
     @Step("Авторизация через API")
     public void beforeEach(ExtensionContext context) {
+        UserConfig userConfig = ConfigFactory.create(UserConfig.class);
+
         LoginRequestModel authData = new LoginRequestModel();
-        authData.setUserName("mrolik");
-        authData.setPassword("Mrolik123%");
+        authData.setUserName(userConfig.userName());
+        authData.setPassword(userConfig.password());
         LoginResponseModel response = given(basicRequestSpec)
                 .body(authData)
                 .when()
